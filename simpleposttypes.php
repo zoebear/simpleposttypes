@@ -51,6 +51,71 @@ function mortens_simple_post_types() {
     
 } // End function mortens_simple_post_types()
 
+// hook into the init action and call create_drawing_taxonomies when it fires
+add_action( 'init', 'create_drawing_taxonomies', 0 );
+
+// create two taxonomies, genres and writers for the post type "drawing"
+function create_drawing_taxonomies() {
+	// Add new taxonomy, make it hierarchical (like categories)
+	$labels = array(
+		'name'              => _x( 'Media', 'taxonomy general name' ),
+		'singular_name'     => _x( 'Media', 'taxonomy singular name' ),
+		'search_items'      => __( 'Search Media' ),
+		'all_items'         => __( 'All Media' ),
+		'parent_item'       => __( 'Parent Media' ),
+		'parent_item_colon' => __( 'Parent Media:' ),
+		'edit_item'         => __( 'Edit Media' ),
+		'update_item'       => __( 'Update Media' ),
+		'add_new_item'      => __( 'Add New Media' ),
+		'new_item_name'     => __( 'New Media Name' ),
+		'menu_name'         => __( 'Media' ),
+	);
+
+	$args = array(
+		'hierarchical'      => true,
+		'labels'            => $labels,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'query_var'         => true,
+		'rewrite'           => array( 'slug' => 'media' ),
+	);
+
+	register_taxonomy( 'media', array( 'drawing' ), $args );
+
+	// Add new taxonomy, NOT hierarchical (like tags)
+	$labels = array(
+		'name'                       => _x( 'Colours', 'taxonomy general name' ),
+		'singular_name'              => _x( 'Colour', 'taxonomy singular name' ),
+		'search_items'               => __( 'Search Colours' ),
+		'popular_items'              => __( 'Popular Colours' ),
+		'all_items'                  => __( 'All Colours' ),
+		'parent_item'                => null,
+		'parent_item_colon'          => null,
+		'edit_item'                  => __( 'Edit Colour' ),
+		'update_item'                => __( 'Update Colour' ),
+		'add_new_item'               => __( 'Add New Colour' ),
+		'new_item_name'              => __( 'New Colour Name' ),
+		'separate_items_with_commas' => __( 'Separate colours with commas' ),
+		'add_or_remove_items'        => __( 'Add or remove colours' ),
+		'choose_from_most_used'      => __( 'Choose from the most used colours' ),
+		'not_found'                  => __( 'No colours found.' ),
+		'menu_name'                  => __( 'Colours' ),
+	);
+
+	$args = array(
+		'hierarchical'          => false,
+		'labels'                => $labels,
+		'show_ui'               => true,
+		'show_admin_column'     => true,
+		'update_count_callback' => '_update_post_term_count',
+		'query_var'             => true,
+		'rewrite'               => array( 'slug' => 'colour' ),
+	);
+
+	register_taxonomy( 'colour', 'drawing', $args );
+}
+
+
 // Flush rewrite rules
 function my_rewrite_flush() {
     // First, we "add" the custom post type via the above written function.
@@ -58,6 +123,7 @@ function my_rewrite_flush() {
     // They are only referenced in the post_type column with a post entry, 
     // when you add a post of this CPT.
     mortens_simple_post_types();
+    create_drawing_taxonomies();
 
     // ATTENTION: This is *only* done during plugin activation hook in this example!
     // You should *NEVER EVER* do this on every page load!!
