@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Morten's Simple Post Types 
+ * Plugin Name: Morten's Other Post Types 
  * Description: A simple plugin to add custom post types and taxonomies to a WordPress site. This plugin was created to demonstrate these principles and the principles of using GitHub and is not for general use. Do not expect it to work.
  * Version: 0.0.1
  * Author: Morten Rand-Hendriksen
